@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import App from "@/app/App";
+import { demoRepository } from "@/services/demoRepository";
 import { indiaDate } from "@/utils/date";
 import "@testing-library/jest-dom/vitest";
 import {
@@ -76,6 +77,190 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("management dashboard interactions", () => {
+  it("searches owner Aadhaar by keyboard and displays every cow and its medicine history", async () => {
+    start("/cow-details");
+    const user = userEvent.setup();
+    expect(
+      screen.getByRole("heading", { name: "Cow Details", level: 1 }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("0000 0000 0001")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Find an owner's cows" }),
+    ).toBeInTheDocument();
+    await user.type(
+      screen.getByLabelText("Owner Aadhaar number"),
+      "0000 0000-0001{Enter}",
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "2 registered cows found for A. Murugan",
+    );
+    expect(
+      screen.getByRole("link", { name: "A. Murugan" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("FMR-0001")).toBeInTheDocument();
+    expect(screen.getByText("DEMO-0001")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Arittapatti Society" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Melur BMC")).toBeInTheDocument();
+    expect(screen.getByText("Arittapatti, Madurai")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "COW-0001-01" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "COW-0001-02" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("DEMO-TAG-0001-01")).toBeInTheDocument();
+    expect(screen.getByText("Jersey cross")).toBeInTheDocument();
+    expect(screen.getByText("15 January 2020")).toBeInTheDocument();
+    expect(screen.getByText("Lactating")).toBeInTheDocument();
+    expect(screen.getByText("No medicine records")).toBeInTheDocument();
+    const rows = within(
+      screen.getByRole("table", { name: "Medicine history for COW-0001-01" }),
+    ).getAllByRole("row");
+    expect(rows).toHaveLength(3);
+    expect(rows[1]).toHaveTextContent("12 September 2026");
+    expect(rows[1]).toHaveTextContent("Demo veterinary supplement");
+    expect(rows[1]).toHaveTextContent("Post-examination care");
+    expect(rows[1]).toHaveTextContent("1 demo measure");
+    expect(rows[1]).toHaveTextContent("3 days");
+    expect(rows[1]).toHaveTextContent("Demo veterinarian B");
+    expect(rows[1]).toHaveTextContent(
+      "Fictional record; routine review recorded.",
+    );
+    expect(rows[2]).toHaveTextContent("10 June 2026");
+    expect(window.location.search).toBe("");
+  });
+  it("validates Aadhaar, handles no match and clears stale results when changing owners", () => {
+    start("/cow-details");
+    const input = screen.getByLabelText("Owner Aadhaar number");
+    const search = screen.getByRole("button", { name: "Search" });
+    for (const value of [
+      "",
+      "123",
+      "0000000000012",
+      "00000000000a",
+      "0000.0000.0001",
+    ]) {
+      fireEvent.change(input, { target: { value } });
+      fireEvent.click(search);
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Enter a 12-digit Aadhaar number",
+      );
+      expect(input).toHaveAttribute("aria-invalid", "true");
+    }
+    fireEvent.change(input, { target: { value: "999999999999" } });
+    fireEvent.click(search);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("No owner found");
+    fireEvent.change(input, { target: { value: "000000000001" } });
+    fireEvent.click(search);
+    expect(
+      screen.getByRole("link", { name: "A. Murugan" }),
+    ).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "000000000002" } });
+    expect(
+      screen.queryByRole("link", { name: "A. Murugan" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(search);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "3 registered cows found for A. Lakshmi",
+    );
+    expect(
+      screen.getByRole("heading", { name: "COW-0002-03" }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+    expect(input).toHaveValue("");
+    expect(input).toHaveFocus();
+    expect(
+      screen.queryByRole("heading", { name: "Owner details" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Find an owner's cows" }),
+    ).toBeInTheDocument();
+  });
+  it("loads cow lookup independently of invalid collection filters and report calculations", () => {
+    const summarize = vi.spyOn(demoRepository, "summarize");
+    const query =
+      "?period=Custom+Range&start=2026-10-17&end=2026-10-01&bmc=BMC-006&society=SOC-030";
+    start(`/cow-details${query}`);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Reporting period")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Preparing your collection report"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Print" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Export data" }),
+    ).not.toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Owner Aadhaar number"), {
+      target: { value: "000000000001" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+    expect(
+      screen.getByRole("link", { name: "A. Murugan" }),
+    ).toBeInTheDocument();
+    expect(summarize).not.toHaveBeenCalled();
+    expect(window.location.search).toBe(query);
+  });
+  it.each([
+    ["A. Murugan", "/farmers/FMR-0001"],
+    ["Arittapatti Society", "/societies/SOC-001"],
+  ])(
+    "opens the linked %s record with its society scope",
+    async (name, path) => {
+      start(
+        "/cow-details?period=Yesterday&shift=Morning&bmc=BMC-006&society=SOC-030",
+      );
+      fireEvent.change(screen.getByLabelText("Owner Aadhaar number"), {
+        target: { value: "000000000001" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Search" }));
+      fireEvent.click(screen.getByRole("link", { name }));
+      await ready();
+      expect(window.location.pathname).toBe(path);
+      expect(
+        screen.getByRole("heading", { level: 1, name }),
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText("Filter by BMC")).toHaveValue("BMC-001");
+      expect(screen.getByLabelText("Filter by society")).toHaveValue("SOC-001");
+      expect(new URLSearchParams(window.location.search).get("period")).toBe(
+        "Yesterday",
+      );
+      expect(new URLSearchParams(window.location.search).get("shift")).toBe(
+        "Morning",
+      );
+    },
+  );
+  it("opens Cow Details from navigation and retains collection filters on return", async () => {
+    start(
+      "/farmers?period=Yesterday&shift=Morning&bmc=BMC-002&society=SOC-007",
+    );
+    await ready();
+    const user = userEvent.setup();
+    const nav = within(
+      screen.getByRole("navigation", { name: "Main navigation" }),
+    );
+    nav.getByRole("link", { name: "Cow Details" }).focus();
+    await user.keyboard("{Enter}");
+    expect(window.location.pathname).toBe("/cow-details");
+    expect(nav.getByRole("link", { name: "Cow Details" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.queryByLabelText("Reporting period")).not.toBeInTheDocument();
+    await user.click(nav.getByRole("link", { name: "Farmers" }));
+    await ready();
+    expect(screen.getByLabelText("Reporting period")).toHaveValue("Yesterday");
+    expect(screen.getByLabelText("Filter by BMC")).toHaveValue("BMC-002");
+    expect(screen.getByLabelText("Filter by society")).toHaveValue("SOC-007");
+    expect(screen.getByRole("button", { name: "Morning" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
   it("supports dropdown keyboard selection, selected states and Escape focus return", async () => {
     start("/?period=Yesterday");
     await ready();
@@ -154,17 +339,18 @@ describe("management dashboard interactions", () => {
       screen.getByRole("heading", { name: "Daily milk ledger" }),
     ).toBeInTheDocument();
   });
-  it("provides seven main pages and shows the default collection overview", async () => {
+  it("provides eight main pages and shows the default collection overview", async () => {
     start();
     await ready();
     const nav = screen.getByRole("navigation", { name: "Main navigation" });
-    expect(within(nav).getAllByRole("link")).toHaveLength(7);
+    expect(within(nav).getAllByRole("link")).toHaveLength(8);
     for (const name of [
       "Overview",
       "Analytics",
       "BMCs",
       "Societies",
       "Farmers",
+      "Cow Details",
       "No Supply",
       "Reports",
     ])

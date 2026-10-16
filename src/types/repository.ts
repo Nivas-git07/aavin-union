@@ -2,6 +2,7 @@ import type {
   BMC,
   CollectionEntry,
   Farmer,
+  OwnerCowDetails,
   Filters,
   QueryOptions,
   Shift,
@@ -16,6 +17,7 @@ export interface CollectionRepository {
   readonly farmers: readonly Farmer[];
   readonly bmcById: ReadonlyMap<string, BMC>;
   readonly societyById: ReadonlyMap<string, Society>;
+  findOwnerByAadhaar(aadhaar: string): OwnerCowDetails | null;
   summarize(filters: Filters, now: Date, options?: QueryOptions): Summary;
   collectionEntry(
     farmer: Farmer,

@@ -961,6 +961,125 @@ h1 {
   color: #79899e;
   white-space: nowrap;
 }
+.cow-details-page {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.cow-details-page > *,
+.cow-record {
+  min-width: 0;
+}
+.cow-search-form {
+  padding: 0 22px 22px;
+}
+.cow-search-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.cow-search-controls {
+  display: flex;
+  gap: 10px;
+  max-width: 740px;
+}
+.cow-search-controls input {
+  flex: 1;
+  width: 100%;
+  border: 1px solid #d7e1ed;
+  border-radius: 8px;
+  padding: 12px;
+  background: white;
+  color: #23334d;
+}
+.cow-search-controls input[aria-invalid="true"] {
+  border-color: #b42318;
+}
+.cow-search-help,
+.cow-search-error {
+  margin-top: 12px;
+  line-height: 1.6;
+  color: #647690;
+}
+.cow-search-error {
+  color: #b42318;
+}
+.cow-search-status:empty {
+  display: none;
+}
+.cow-search-status {
+  color: #425a75;
+}
+.cow-search-empty {
+  gap: 12px;
+}
+.cow-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0 22px 22px;
+  margin: 0;
+}
+.cow-facts dt {
+  color: #647690;
+  margin-bottom: 7px;
+}
+.cow-facts dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.cow-facts a {
+  color: #076dbf;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cow-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cow-section-heading span {
+  border-radius: 20px;
+  background: #e4effc;
+  padding: 4px 10px;
+  color: #076dbf;
+}
+.cow-medicine-heading {
+  padding: 18px 22px;
+  border-top: 1px solid #edf1f6;
+}
+.cow-no-medicines {
+  padding: 0 22px 22px;
+  color: #647690;
+}
+.cow-medicine-table {
+  min-width: 1000px;
+}
+.cow-medicine-table td {
+  vertical-align: top;
+  line-height: 1.6;
+}
+@media (max-width: 1050px) {
+  .cow-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .cow-search-controls {
+    flex-wrap: wrap;
+  }
+  .cow-search-controls input {
+    flex-basis: 100%;
+  }
+  .cow-search-controls .button {
+    flex: 1;
+    justify-content: center;
+  }
+  .cow-facts {
+    gap: 20px 14px;
+  }
+}
 .supply-legend dd {
   font-weight: 600;
   color: #405874;

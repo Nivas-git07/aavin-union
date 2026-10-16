@@ -27,7 +27,7 @@ export default function App() {
       linkTo={linkTo}
       printContent={
         <>
-          {summary && (
+          {page !== "cow-details" && summary && (
             <PrintReport
               title={
                 printReport?.title ||

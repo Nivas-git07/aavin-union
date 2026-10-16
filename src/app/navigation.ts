@@ -3,6 +3,7 @@ import {
   Building2,
   FileBarChart2,
   LayoutDashboard,
+  Milk,
   TriangleAlert,
   Users,
   Warehouse,
@@ -14,6 +15,7 @@ export const navItems = [
   { path: "bmcs", title: "BMCs", icon: Warehouse },
   { path: "societies", title: "Societies", icon: Building2 },
   { path: "farmers", title: "Farmers", icon: Users },
+  { path: "cow-details", title: "Cow Details", icon: Milk },
   { path: "no-supply", title: "No Supply", icon: TriangleAlert },
   { path: "reports", title: "Reports", icon: FileBarChart2 },
 ];
@@ -38,6 +40,10 @@ export const titles: Record<string, [string, string]> = {
   farmers: [
     "Farmer directory",
     "Explore farmer profiles, milk collection and supply history.",
+  ],
+  "cow-details": [
+    "Cow Details",
+    "Find an owner's registered cows and medicine history by Aadhaar number.",
   ],
   "no-supply": [
     "Supply exceptions",

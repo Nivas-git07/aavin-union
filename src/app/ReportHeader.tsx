@@ -35,42 +35,44 @@ export function ReportHeader({ dashboard }: { dashboard: DashboardState }) {
               : titles[page]?.[1]}
           </p>
         </div>
-        <div className="page-actions">
-          <button
-            className="icon-button refresh"
-            aria-label="Refresh collection data"
-            onClick={() => setNow(new Date())}
-          >
-            <RefreshCw size={16} />
-          </button>
-          <button
-            className="button"
-            disabled={!summary || !!error}
-            onClick={() =>
-              print(
-                `${detailEntity?.name || titles[page]?.[0]} report`,
-                isEntity
-                  ? kind
-                  : page === "no-supply"
-                    ? "no-supply"
-                    : "summary",
-              )
-            }
-          >
-            <Printer size={15} />
-            <span>Print</span>
-          </button>
-          <button
-            className="button primary-button"
-            disabled={!summary || !!error}
-            onClick={exportCurrent}
-          >
-            <ArrowDownToLine size={15} />
-            <span>Export data</span>
-          </button>
-        </div>
+        {page !== "cow-details" && (
+          <div className="page-actions">
+            <button
+              className="icon-button refresh"
+              aria-label="Refresh collection data"
+              onClick={() => setNow(new Date())}
+            >
+              <RefreshCw size={16} />
+            </button>
+            <button
+              className="button"
+              disabled={!summary || !!error}
+              onClick={() =>
+                print(
+                  `${detailEntity?.name || titles[page]?.[0]} report`,
+                  isEntity
+                    ? kind
+                    : page === "no-supply"
+                      ? "no-supply"
+                      : "summary",
+                )
+              }
+            >
+              <Printer size={15} />
+              <span>Print</span>
+            </button>
+            <button
+              className="button primary-button"
+              disabled={!summary || !!error}
+              onClick={exportCurrent}
+            >
+              <ArrowDownToLine size={15} />
+              <span>Export data</span>
+            </button>
+          </div>
+        )}
       </div>
-      {!missingPage && (
+      {!missingPage && page !== "cow-details" && (
         <>
           <FilterBar
             filters={filters}

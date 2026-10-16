@@ -1,6 +1,7 @@
 import type { DashboardState } from "@/hooks/useDashboard";
 import { Analytics } from "@/pages/AnalyticsPage";
 import { BmcsPage } from "@/pages/BmcsPage";
+import { CowDetailsPage } from "@/pages/CowDetailsPage";
 import { Detail } from "@/pages/EntityDetailPage";
 import { FarmersPage } from "@/pages/FarmersPage";
 import { NoSupply } from "@/pages/NoSupplyPage";
@@ -42,6 +43,8 @@ export function DashboardContent({ dashboard }: { dashboard: DashboardState }) {
             Back to overview
           </Link>
         </div>
+      ) : page === "cow-details" ? (
+        <CowDetailsPage linkTo={linkTo} now={now} />
       ) : error ? (
         <div className="error-state" role="alert">
           <TriangleAlert size={26} />

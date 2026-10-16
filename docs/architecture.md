@@ -1,6 +1,6 @@
 # Project architecture
 
-The application is organized by responsibility. `src/app/App.tsx` composes the layout, reporting controls, active page and printable output. It does not contain the seven page implementations or the collection generator.
+The application is organized by responsibility. `src/app/App.tsx` composes the layout, reporting controls, active page and printable output. It does not contain the eight page implementations or the collection generator.
 
 ```text
 aavin union/
@@ -20,6 +20,7 @@ aavin union/
 │   │   ├── BmcsPage.tsx
 │   │   ├── SocietiesPage.tsx
 │   │   ├── FarmersPage.tsx
+│   │   ├── CowDetailsPage.tsx          # Owner Aadhaar lookup and cow histories
 │   │   ├── NoSupplyPage.tsx
 │   │   ├── ReportsPage.tsx
 │   │   └── EntityDetailPage.tsx     # BMC, society and farmer profiles
@@ -38,6 +39,7 @@ aavin union/
 │   ├── data/
 │   │   └── mock/
 │   │       ├── network.ts          # Demo BMCs, societies and farmers
+│   │       ├── cows.ts             # Demo cows and medicine records
 │   │       └── collectionGenerator.ts
 │   ├── domain/
 │   │   ├── collection.ts           # Totals, comparisons, rollups and follow-up
@@ -107,3 +109,9 @@ The current `CollectionRepository` is synchronous because all records are genera
 | Change CSV fields                        | `reports/exportRows.ts`                                   |
 | Change print layout                      | `reports/PrintReport.tsx`                                 |
 | Change branding or responsiveness        | `components/ui/Logo.tsx`, `styles/globals.css`            |
+
+## Cow Details data flow
+
+`pages/CowDetailsPage.tsx` owns the local owner-Aadhaar form and results. It uses `demoRepository.findOwnerByAadhaar` to retrieve an exact owner match, the linked society/BMC, and each cow with its medicine records sorted newest first. `data/mock/cows.ts` generates cow records that reconcile with each farmer's registered count, plus fictional treatment histories. The domain types are `Cow`, `MedicineRecord` and `OwnerCowDetails`; farmers carry a `demoAadhaar` placeholder.
+
+The `/cow-details` route is separate from collection reporting: summary calculations are skipped, report loading/validation states do not gate the lookup, and collection filters/actions/print output are hidden. Navigation preserves existing report parameters, but the Aadhaar search value never enters URL state.

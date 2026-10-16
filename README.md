@@ -22,17 +22,18 @@ npm.cmd run preview -- --port 4173
 
 The production files are in `dist/`. Preview them at **http://127.0.0.1:4173/**. Serve `dist/` over HTTP; opening `index.html` directly with a `file:` URL is not supported. A future static host must rewrite unknown paths to `/index.html` for client-side routing. Nothing has been deployed.
 
-## Seven main pages
+## Eight main pages
 
-| Page      | Route              | Main features                                                                   |
-| --------- | ------------------ | ------------------------------------------------------------------------------- |
-| Overview  | `/overview` or `/` | Collection KPIs, trends, participation, BMC comparison and follow-up shortcuts  |
-| Analytics | `/analytics`       | Period totals, daily average, contribution, missed shifts and chart data tables |
-| BMCs      | `/bmcs`            | Searchable, sortable BMC directory                                              |
-| Societies | `/societies`       | Society directory, parent BMC and farmer drilldown                              |
-| Farmers   | `/farmers`         | Farmer directory, registered cows and collection status                         |
-| No Supply | `/no-supply`       | Farmer, society and BMC exception lists; zero, missing and pending filters      |
-| Reports   | `/reports`         | Five complete CSV/print reports                                                 |
+| Page        | Route              | Main features                                                                           |
+| ----------- | ------------------ | --------------------------------------------------------------------------------------- |
+| Overview    | `/overview` or `/` | Collection KPIs, trends, participation, BMC comparison and follow-up shortcuts          |
+| Analytics   | `/analytics`       | Period totals, daily average, contribution, missed shifts and chart data tables         |
+| BMCs        | `/bmcs`            | Searchable, sortable BMC directory                                                      |
+| Societies   | `/societies`       | Society directory, parent BMC and farmer drilldown                                      |
+| Farmers     | `/farmers`         | Farmer directory, registered cows and collection status                                 |
+| Cow Details | `/cow-details`     | Owner Aadhaar lookup, linked owner/society profiles, cow records and medicine histories |
+| No Supply   | `/no-supply`       | Farmer, society and BMC exception lists; zero, missing and pending filters              |
+| Reports     | `/reports`         | Five complete CSV/print reports                                                         |
 
 Each BMC, society and farmer also has its own detail route, for example `/bmcs/BMC-001`, `/societies/SOC-001` and `/farmers/FMR-0003`. BMC profiles expose both linked societies and linked farmers. BMC and society profiles include paginated daily collection histories; farmer profiles include morning/evening ledgers.
 
@@ -56,10 +57,10 @@ Dates, shift, BMC and society filters persist in the URL. Parent filters are pin
 
 ## Source structure
 
-The project has separate modules for all seven main pages, shared layouts and UI components, collection rules, demo data, reporting and tests. See [the full folder architecture](docs/architecture.md) for the tree, data flow and dependency rules.
+The project has separate modules for all eight main pages, shared layouts and UI components, collection rules, demo data, reporting and tests. See [the full folder architecture](docs/architecture.md) for the tree, data flow and dependency rules.
 
 - `src/app/App.tsx`: small application composition entry point.
-- `src/pages/`: seven main pages plus BMC/society/farmer detail views.
+- `src/pages/`: eight main pages plus BMC/society/farmer detail views.
 - `src/components/`: reusable layouts, filters, charts, tables and UI primitives.
 - `src/hooks/useDashboard.ts`: shared URL state, loading and reporting actions.
 - `src/services/demoRepository.ts`: typed data adapter used by the UI.
@@ -84,6 +85,14 @@ The source logo asset is downloaded from the official Aavin site:
 
 ## Verification
 
-Tests cover hierarchy reconciliation, integer quantities, date boundaries, leap years, yearly aggregation, shift closure, inactive farmers, pending/zero/missing statuses, partial supply, prior-period comparisons, complete CSV exports, seven-page navigation, filter retention, drilldown, search, pagination, sorting, date selection, print reports and error states.
+Tests cover hierarchy reconciliation, integer quantities, date boundaries, leap years, yearly aggregation, shift closure, inactive farmers, pending/zero/missing statuses, partial supply, prior-period comparisons, complete CSV exports, eight-page navigation, filter retention, drilldown, search, pagination, sorting, date selection, print reports and error states.
 
-Chart geometry and physical print pagination need visual review in a real browser. No connected browser was available during implementation; DOM interaction tests use a chart-container stub, and the local HTTP response was verified. Responsive layouts and print styles are implemented but have not been screenshot-verified.
+Chart geometry and physical print pagination still need visual review; DOM interaction tests use a chart-container stub. Cow Details was reviewed in local Chrome at desktop (1440 px) and mobile (390 px) widths: owner search, cow cards, and medicine histories render without page-wide horizontal overflow or browser runtime errors. Medicine tables scroll within their cards on mobile. Other pages and physical print pagination have not been screenshot-verified.
+
+## Cow Details lookup
+
+Open **Cow Details** and search using the fictional owner Aadhaar **0000 0000 0001** (A. Murugan, two cows) or **0000 0000 0002** (A. Lakshmi, three cows). Spaces and hyphens are accepted; lookup requires exactly 12 digits. These leading-zero identifiers are demo placeholders, not verified Aadhaar identities.
+
+Results include the owner, farmer ID, demo contact, society, BMC and village, followed by every registered cow with tag ID, breed, birth date, age and lactation status. Medicine histories show recorded treatments newest first, including dose, duration, veterinarian and notes; all medicines and doses are fictional demonstration entries.
+
+The lookup searches the entire union independently of collection filters. It keeps Aadhaar input only in component state, clears results when input changes and does not save the value in URLs or browser storage. Existing collection filters remain available when returning to report pages. This page is read-only and has no collection export/print controls or real identity verification.

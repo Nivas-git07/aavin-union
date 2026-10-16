@@ -80,6 +80,7 @@ export const societies: Society[] = villages.map((name, i) => ({
 
 export const farmers: Farmer[] = Array.from({ length: 600 }, (_, i) => ({
   id: `FMR-${String(i + 1).padStart(4, "0")}`,
+  demoAadhaar: `000000${String(i + 1).padStart(6, "0")}`,
   name: `${String.fromCharCode(65 + (Math.floor(i / 20) % 20))}. ${names[i % 20]}`,
   societyId: societies[Math.floor(i / 20)].id,
   village: villages[Math.floor(i / 20)],

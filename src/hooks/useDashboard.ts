@@ -34,6 +34,7 @@ export function useDashboard() {
     id = segments[1];
   const isEntity = ["bmcs", "societies", "farmers"].includes(page),
     kind = page as EntityKind;
+  const isCowDetails = page === "cow-details";
   const detailEntity =
     id && isEntity
       ? page === "bmcs"
@@ -86,7 +87,7 @@ export function useDashboard() {
     return () => clearInterval(timer);
   }, []);
   useEffect(() => {
-    if (validation) return;
+    if (isCowDetails || validation) return;
     setLoadError("");
     const timer = setTimeout(() => {
       try {
@@ -111,7 +112,7 @@ export function useDashboard() {
       }
     }, 20);
     return () => clearTimeout(timer);
-  }, [calculationKey, validation]);
+  }, [calculationKey, validation, isCowDetails]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);

@@ -25,6 +25,7 @@ export interface Society {
 
 export interface Farmer {
   id: string;
+  demoAadhaar: string;
   name: string;
   societyId: string;
   village: string;
@@ -33,6 +34,34 @@ export interface Farmer {
   active: boolean;
   shifts: Shift[];
   index: number;
+}
+
+export interface Cow {
+  id: string;
+  farmerId: string;
+  tagId: string;
+  breed: string;
+  birthDate: string;
+  lactationStatus: "Lactating" | "Dry" | "Heifer";
+}
+
+export interface MedicineRecord {
+  id: string;
+  cowId: string;
+  treatmentDate: string;
+  medicine: string;
+  reason: string;
+  recordedDose: string;
+  duration: string;
+  veterinarian: string;
+  notes: string;
+}
+
+export interface OwnerCowDetails {
+  owner: Farmer;
+  society: Society;
+  bmc: BMC;
+  cows: (Cow & { medicines: MedicineRecord[] })[];
 }
 
 export interface CollectionEntry {
