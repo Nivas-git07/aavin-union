@@ -1,0 +1,282 @@
+/* Self-hosted Inter. Keep the type scale in one place for every breakpoint. */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("@fontsource-variable/inter/files/inter-latin-standard-normal.woff2")
+    format("woff2");
+}
+
+:root {
+  --text-caption: 0.75rem;
+  --text-small: 0.8125rem;
+  --text-body: 0.875rem;
+  --text-label: 0.9375rem;
+  --text-section: 1rem;
+  --text-heading: 1.875rem;
+  font-size: 16px;
+  font-optical-sizing: auto;
+}
+
+body {
+  font-size: var(--text-body);
+  line-height: 1.55;
+}
+
+h1 {
+  font-size: var(--text-heading);
+}
+h2 {
+  font-size: var(--text-section);
+}
+h3 {
+  font-size: var(--text-label);
+}
+small {
+  font-size: var(--text-caption);
+}
+
+/* Navigation and primary controls. */
+.nav-item {
+  font-size: var(--text-body);
+}
+.brand strong {
+  font-size: 0.625rem;
+}
+.brand small {
+  font-size: 0.625rem;
+}
+.workspace-label,
+.eyebrow,
+.report-format,
+.search-results-heading {
+  font-size: var(--text-caption);
+}
+.topbar-location,
+.user-info strong,
+.union-card strong,
+.sidebar-help,
+.sidebar-collapse,
+.global-search input,
+.search-results b,
+.button,
+.period-control select,
+.select-field select,
+.tab-group button {
+  font-size: var(--text-small);
+}
+.union-card > span,
+.union-card > div:last-child,
+.user-info small,
+.demo-pill,
+.user-avatar,
+.search-results small,
+.search-results > p,
+.button.small,
+.text-button,
+.shift-tabs button,
+.filter-details label,
+.filter-details > span,
+.filter-details .text-button {
+  font-size: var(--text-caption);
+}
+.filter-details input,
+.search-box input {
+  font-size: var(--text-small);
+}
+.search-hint {
+  font-size: 1.0625rem;
+}
+
+/* Body copy and reporting context. */
+.page-heading p,
+.notice p,
+.report-card p,
+.report-banner p,
+.help-dialog > p,
+.help-dialog dd {
+  font-size: var(--text-body);
+}
+.report-context,
+.footnote,
+.page-footer,
+.subnav,
+.detail-breadcrumb,
+.report-banner-date {
+  font-size: var(--text-caption);
+}
+
+/* KPI hierarchy; large quantities retain enough room for Indian digit grouping. */
+.metric-top,
+.metric-note,
+.metric.primary .metric-note,
+.change {
+  font-size: var(--text-caption);
+}
+.metric-value {
+  font-size: 1.75rem;
+}
+.metric.primary .metric-value,
+.metrics-grid.four .metric-value {
+  font-size: clamp(1.125rem, 1.8vw, 1.875rem);
+}
+.metric-value small,
+.chart-summary strong small {
+  font-size: var(--text-small);
+}
+.chart-summary strong,
+.directory-summary strong {
+  font-size: 1.75rem;
+}
+.directory-summary strong em {
+  font-size: var(--text-body);
+}
+.donut-label strong {
+  font-size: 2rem;
+}
+.donut-label strong small {
+  font-size: 1rem;
+}
+.exception-cards strong {
+  font-size: 1.75rem;
+}
+.metric-value,
+.chart-summary strong,
+.directory-summary strong,
+.donut-label,
+.exception-cards strong,
+td,
+.supply-legend dd,
+.chart-footer b {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Panels, charts and supply follow-up. */
+.panel-heading h2,
+.section-label h2,
+.detail-section-actions h2,
+.report-card h2 {
+  font-size: var(--text-section);
+}
+.panel-heading p,
+.chart-summary > div:first-child > span,
+.legend,
+.chart-footer,
+.donut-label > span,
+.supply-legend dt,
+.attention-summary p,
+.attention-list small,
+.attention-list .attention-count,
+.panel-bottom-note,
+.section-label p,
+.directory-summary small,
+.exception-cards small {
+  font-size: var(--text-caption);
+}
+.chart-footer b,
+.supply-legend dd,
+.attention-summary strong {
+  font-size: var(--text-small);
+}
+.attention-list strong {
+  font-size: var(--text-body);
+}
+
+/* Tables remain readable; overflow scrolls instead of shrinking the text. */
+th,
+.badge,
+.cell-sub,
+.entity-name small,
+.pattern,
+.table-tools > span,
+.table-pagination,
+.chart-data caption {
+  font-size: var(--text-caption);
+}
+td,
+.cell-main,
+.chart-data td {
+  font-size: var(--text-small);
+}
+.entity-name strong,
+.numeric strong {
+  font-size: var(--text-body);
+}
+.entity-avatar {
+  font-size: var(--text-caption);
+}
+.entity-avatar.farmers {
+  font-size: var(--text-body);
+}
+
+/* Profiles, reports and feedback. */
+.profile-heading h2,
+.report-banner h2,
+.loading-state h2,
+.error-state h2,
+.page-empty h2 {
+  font-size: 1.25rem;
+}
+.profile-heading p,
+.profile-facts > span {
+  font-size: var(--text-caption);
+}
+.profile-facts strong {
+  font-size: var(--text-small);
+}
+.empty h3,
+.help-dialog dt {
+  font-size: var(--text-body);
+}
+.empty p,
+.loading-state p,
+.error-state p,
+.page-empty p {
+  font-size: var(--text-small);
+}
+.help-dialog h2 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 760px) {
+  h1 {
+    font-size: 1.625rem;
+  }
+  .profile-heading h2,
+  .report-banner h2 {
+    font-size: 1.125rem;
+  }
+  .chart-summary strong {
+    font-size: 1.5rem;
+  }
+  .page-footer {
+    font-size: var(--text-caption);
+  }
+  .filter-details input,
+  .search-box input,
+  .period-control select,
+  .select-field select {
+    font-size: 1rem;
+  }
+}
+
+@media print {
+  body {
+    font-size: 10pt;
+  }
+  .print-report header h1 {
+    font-size: 18pt;
+  }
+  .print-report header h2 {
+    font-size: 13pt;
+  }
+  .print-report header > b,
+  .print-report > p {
+    font-size: 9pt;
+  }
+  .print-report th,
+  .print-report td {
+    font-size: 8pt;
+  }
+}
